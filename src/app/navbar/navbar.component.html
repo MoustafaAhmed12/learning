@@ -1,0 +1,30 @@
+<!-- <div class="p-2">
+  <form class="w-50 row">
+    <input type="number" class="my-4 form-control" #id />
+    <input type="text" class="my-4 form-control" #name />
+    <input
+      (keyup.enter)="sentToParent(id, name, price)"
+      type="number"
+      class="my-4 form-control"
+      #price
+    />
+  </form>
+  <ng-content [select]="'for'"></ng-content>
+</div> -->
+
+<main
+  class="flex items-center justify-center w-full h-screen border rounded-lg shadow-lg"
+>
+  <h1>{{ myName }}</h1>
+  <div class="flex flex-col py-8 border rounded-lg shadow-lg gap-y-8 px-14">
+    <div class="self-start px-16 py-4 border rounded-lg bg-slate-200">
+      <ng-content select="[slot='header']"></ng-content>
+    </div>
+
+    <div class="p-4 border rounded-lg">
+      <ng-content>
+        <p class="text-xl text-red-600">it will be show when no Content</p>
+      </ng-content>
+    </div>
+  </div>
+</main>
