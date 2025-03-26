@@ -22,6 +22,7 @@ export class MultiLangService {
           return 'ar';
       }
     });
+    this.setDirection(this.currenLang());
   }
 
   constructor() {
@@ -32,6 +33,11 @@ export class MultiLangService {
         localStorage.setItem(this.LNAG, this.currenLang());
         this.translate.use(this.currenLang());
       }
+      this.setDirection(this.currenLang());
     });
+  }
+  private setDirection(lang: string) {
+    document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+    document.documentElement.setAttribute('lang', lang);
   }
 }

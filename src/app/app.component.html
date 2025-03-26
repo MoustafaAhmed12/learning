@@ -1,4 +1,34 @@
-<button
+<div class="min-h-screen p-4 dark:bg-gray-900">
+  <!-- الفلاتر -->
+  <form
+    [formGroup]="filterForm"
+    (ngSubmit)="applyFilters()"
+    class="flex flex-wrap gap-4 mb-4"
+  >
+    <input
+      formControlName="productName"
+      placeholder="اسم المنتج"
+      class="input"
+    />
+    <input formControlName="category" placeholder="التصنيف" class="input" />
+    <button type="submit" class="btn">تطبيق الفلاتر</button>
+  </form>
+
+  <!-- زر الطباعة -->
+  <button (click)="printBarcodes()" class="mb-4 btn">طباعة الباركودات</button>
+
+  <!-- عرض الباركودات -->
+  <div #barcodeContainer class="flex flex-wrap gap-4">
+    @for (code of barcodes; track i; let i = $index) {
+
+    <div class="barcode-item">
+      <canvas [id]="'barcode-' + i"></canvas>
+    </div>
+    }
+  </div>
+</div>
+
+<!-- <button
   (click)="toggleTheme()"
   class="w-full p-2 text-black transition-all duration-500 bg-white border rounded-md dark:bg-gray-900 dark:text-white"
 >
@@ -25,4 +55,4 @@
   class="min-h-screen text-black transition-all duration-500 bg-white dark:bg-gray-900 dark:text-white"
 >
   <h1 class="text-3xl font-bold">{{ "hello" | translate }}</h1>
-</div>
+</div> -->

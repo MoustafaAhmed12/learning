@@ -30,16 +30,51 @@ import { ChangeModeService } from './service/change-mode.service';
 import { CookieService } from 'ngx-cookie-service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MultiLangService } from './service/multi-lang.service';
-import { FormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import JsBarcode from 'jsbarcode';
 
 // import { CookieService } from 'ngx-t';
 @Component({
   selector: 'app-root',
-  imports: [TranslateModule, FormsModule],
+  imports: [TranslateModule, FormsModule, ReactiveFormsModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
 export class AppComponent {
+  fb = inject(FormBuilder);
+  filterForm: FormGroup;
+  barcodes: string[] = [];
+
+  @ViewChild('barcodeContainer') barcodeContainer!: ElementRef;
+  applyFilters() {
+    // توليد 10 باركودات عشوائية
+    this.barcodes = Array.from({ length: 10 }, () =>
+      Math.floor(1000000000 + Math.random() * 9000000000).toString()
+    );
+
+    setTimeout(() => this.generateBarcodes(), 100); // انتظار عرض العناصر
+  }
+
+  generateBarcodes() {
+    this.barcodes.forEach((code, index) => {
+      const canvas = document.getElementById(
+        `barcode-${index}`
+      ) as HTMLCanvasElement;
+      if (canvas) {
+        JsBarcode(canvas, code, { format: 'CODE128', displayValue: true });
+      }
+    });
+  }
+
+  printBarcodes() {
+    window.print();
+  }
+
   changeModeService = inject(ChangeModeService);
   multiLangService = inject(MultiLangService);
   isDarkMode: boolean = false;
@@ -60,6 +95,10 @@ export class AppComponent {
     this.isDarkMode = document.documentElement.classList.contains('dark');
     this.selectedLang.set(this.multiLangService.currenLang());
     console.log(this.selectedLang());
+    this.filterForm = this.fb.group({
+      productName: [''],
+      category: [''],
+    });
   }
 
   toggleTheme() {
