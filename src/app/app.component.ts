@@ -3,6 +3,7 @@ import {
   AfterContentInit,
   AfterViewInit,
   Component,
+  CUSTOM_ELEMENTS_SCHEMA,
   DoCheck,
   ElementRef,
   inject,
@@ -51,15 +52,20 @@ interface Product {
   image?: string; // الصورة اختيارية
   expanded?: boolean; // للتحكم في إظهار التفاصيل
 }
+import Swal from 'sweetalert2';
+import { HttpClient } from '@angular/common/http';
+
 // import { CookieService } from 'ngx-t';
 @Component({
   selector: 'app-root',
   imports: [TranslateModule, FormsModule, ReactiveFormsModule, CommonModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class AppComponent {
   fb = inject(FormBuilder);
+  http = inject(HttpClient);
   filterForm: FormGroup;
   barcodes: string[] = [];
 
@@ -92,6 +98,119 @@ export class AppComponent {
       // مفيش صورة هنا
     },
   ];
+
+  showMag() {
+    Swal.fire({
+      title: 'يوجد منتج!',
+      text: 'هل تريد التعديل ام إدخال منتج جديد ؟',
+      icon: 'question',
+      // iconHtml: '?',
+      iconColor: '#3085d6',
+      confirmButtonText: 'نعم',
+      cancelButtonText: 'لا',
+      showCancelButton: true,
+      showCloseButton: true,
+      background: this.isDarkMode ? '#333' : '#fff',
+      color: this.isDarkMode ? '#fff' : '#000',
+      confirmButtonColor: this.isDarkMode ? '#1e88e5' : '#007bff',
+      cancelButtonColor: this.isDarkMode ? '#d32f2f' : '#dc3545',
+      customClass: {
+        popup: this.selectedLang() === 'ar' ? 'swal-rtl' : 'swal-ltr',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // عرض الـ Loader أثناء استدعاء الـ API
+        Swal.fire({
+          title: 'تم عرض المنتج...',
+        });
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        Swal.fire({
+          title: 'Cancelled',
+          text: 'Your imaginary file is safe :)',
+          icon: 'error',
+        });
+      }
+    });
+  }
+
+  getItem(itemId: number) {
+    this.http
+      .get(`https://jsonplaceholder.typicode.com/posts/${itemId}`)
+      .subscribe({
+        next: (res) => {
+          console.log(res);
+          this.showMag();
+        },
+        error: () => {
+          Swal.fire({
+            title: 'خطأ!',
+            text: 'لم يتم العثور ع منتج.',
+            icon: 'error',
+          });
+        },
+      });
+  }
+
+  show(itemId: number) {
+    Swal.fire({
+      title: 'هل تريد الاستمرار؟',
+      text: 'لن تتمكن من التراجع عن هذا!',
+      icon: 'question',
+      iconHtml: '$',
+      iconColor: '#3085d6',
+      theme: 'auto',
+      // toast: true,
+      confirmButtonText: 'نعم',
+      cancelButtonText: 'لا',
+      showCancelButton: true,
+      showCloseButton: true,
+      background: this.isDarkMode ? '#333' : '#fff',
+      color: this.isDarkMode ? '#fff' : '#000',
+      confirmButtonColor: this.isDarkMode ? '#1e88e5' : '#007bff',
+      cancelButtonColor: this.isDarkMode ? '#d32f2f' : '#dc3545',
+      customClass: {
+        popup: this.selectedLang() === 'ar' ? 'swal-rtl' : 'swal-ltr',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // عرض الـ Loader أثناء استدعاء الـ API
+        Swal.fire({
+          title: 'جارٍ الحذف...',
+          allowOutsideClick: false,
+          didOpen: () => {
+            Swal.showLoading(); // تشغيل الـ Loader
+          },
+        });
+
+        this.deleteItem(itemId);
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        Swal.fire({
+          title: 'Cancelled',
+          text: 'Your imaginary file is safe :)',
+          icon: 'error',
+        });
+      }
+    });
+  }
+
+  deleteItem(itemId: number) {
+    this.http.delete(`https://jsonplaceholder.typicode.com/posts/1`).subscribe({
+      next: () => {
+        Swal.fire({
+          title: 'تم الحذف!',
+          text: 'تم حذف العنصر بنجاح.',
+          icon: 'success',
+        });
+      },
+      error: () => {
+        Swal.fire({
+          title: 'خطأ!',
+          text: 'حدث خطأ أثناء الحذف.',
+          icon: 'error',
+        });
+      },
+    });
+  }
 
   searchQuery = '';
   selectedCategory = '';
