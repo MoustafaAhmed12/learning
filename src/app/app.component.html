@@ -1,5 +1,231 @@
-<div class="min-h-screen p-4 dark:bg-gray-900">
-  <!-- الفلاتر -->
+<div class="container p-6 mx-auto space-y-6">
+  <div class="flex flex-col items-center justify-between gap-4 md:flex-row">
+    <!-- مربع البحث -->
+    <div class="flex items-center w-full space-x-2 md:w-1/3">
+      <input
+        type="text"
+        [(ngModel)]="searchQuery"
+        (keyup)="filterProducts()"
+        placeholder="🔍 ابحث عن منتج..."
+        class="w-full p-3 transition-all border rounded-lg shadow-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+      />
+    </div>
+
+    <!-- الفلاتر -->
+    <div class="flex items-center w-full space-x-4 md:w-2/3">
+      <!-- فلتر التصنيف -->
+      <div class="flex items-center space-x-2">
+        <label for="category" class="text-lg">📂 التصنيف</label>
+        <select
+          id="category"
+          [(ngModel)]="selectedCategory"
+          (change)="filterProducts()"
+          class="p-3 transition-all border rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500"
+        >
+          <option value="">📂 كل التصنيفات</option>
+          <option *ngFor="let category of categories" [value]="category">
+            {{ category }}
+          </option>
+        </select>
+      </div>
+
+      <!-- فلتر السعر -->
+      <div class="flex items-center space-x-2">
+        <label for="priceRange" class="text-lg">💰 السعر</label>
+        <select
+          id="priceRange"
+          [(ngModel)]="selectedPriceRange"
+          (change)="filterProducts()"
+          class="p-3 transition-all border rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500"
+        >
+          <option value="">💰 كل الأسعار</option>
+          <option value="low">⬇️ أقل من 100 ج.م</option>
+          <option value="medium">⚖️ بين 100 و 500 ج.م</option>
+          <option value="high">⬆️ أكثر من 500 ج.م</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div
+    class="overflow-x-auto bg-white border border-gray-200 shadow-lg rounded-xl"
+  >
+    <table class="w-full text-xs text-right border-collapse md:text-sm">
+      <thead>
+        <tr
+          class="text-sm text-center text-white md:text-base bg-gradient-to-r from-purple-600 to-indigo-600"
+        >
+          <th class="px-5 py-4 border">الباركود</th>
+          <th class="px-5 py-4 border">الاسم</th>
+          <th class="px-5 py-4 border">السعر</th>
+          <th class="px-5 py-4 border">التصنيف</th>
+          <th class="px-5 py-4 border">التحكم</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (product of filteredProducts ; track $index) {
+        <!-- الصف الأساسي -->
+        <tr
+          class="text-center transition-all duration-300 hover:bg-gray-50"
+          [class.border-b-8]="!$last"
+          [class.border-t-8]="$first"
+        >
+          <td class="flex items-center px-5 py-4 font-semibold gap-x-6">
+            <button
+              (click)="toggleDetails(product)"
+              class="p-1 transition-transform duration-300"
+              [ngClass]="{ 'rotate-180': product.expanded }"
+            >
+              <svg
+                class="w-5 h-5 text-indigo-600"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M19 9l-7 7-7-7"
+                ></path>
+              </svg>
+            </button>
+            <span>{{ product.barcode }}</span>
+          </td>
+          <td class="px-5 py-4 font-semibold text-gray-700">
+            {{ product.name }}
+          </td>
+          <td class="px-5 py-4 font-semibold text-green-600">
+            {{ product.cashPrice }} ج.م
+          </td>
+          <td class="px-5 py-4 font-semibold text-blue-600">
+            {{ product.category }}
+          </td>
+          <td class="flex justify-center gap-3 px-5 py-4">
+            <!-- زر تعديل -->
+            <button
+              class="text-yellow-600 transition-all hover:text-yellow-800"
+              (click)="editProduct(product)"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M11 4h2M12 4v12m6 4H6"
+                ></path>
+              </svg>
+            </button>
+
+            <!-- زر حذف -->
+            <button
+              class="text-red-600 transition-all hover:text-red-800"
+              (click)="deleteProduct(product)"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                ></path>
+              </svg>
+            </button>
+          </td>
+        </tr>
+
+        <!-- تفاصيل المنتج -->
+        <tr *ngIf="product.expanded">
+          <td colspan="5" class="p-0">
+            <div
+              class="overflow-hidden transition-all duration-500 ease-in-out transform bg-gray-100 border border-gray-300 shadow-md opacity-0"
+              [ngClass]="{ 'scale-y-100 opacity-100': product.expanded }"
+            >
+              <div class="p-5">
+                <div class="flex flex-col items-center gap-4 md:flex-row">
+                  <!-- صورة المنتج إن وجدت -->
+                  <div *ngIf="product.image" class="flex-shrink-0 w-32 h-32">
+                    <img
+                      [src]="product.image"
+                      alt="صورة المنتج"
+                      class="object-cover w-full h-full rounded-lg shadow-md"
+                    />
+                  </div>
+
+                  <!-- تفاصيل المنتج داخل Boxes -->
+                  <div
+                    class="grid w-full grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3"
+                  >
+                    <div class="p-4 bg-white border rounded-lg shadow">
+                      <strong>📌 الاسم المختصر:</strong>
+                      <p class="text-gray-600">{{ product.shortName }}</p>
+                    </div>
+
+                    <div class="p-4 bg-white border rounded-lg shadow">
+                      <strong>📜 الوصف:</strong>
+                      <div class="relative group">
+                        <p class="text-sm truncate">الوصف الطويل هنا</p>
+                        <div
+                          class="absolute z-50 hidden p-2 mb-2 text-xs text-white transform -translate-x-1/2 bg-gray-700 rounded shadow-lg left-1/2 bottom-full group-hover:block"
+                        >
+                          هذا هو الوصف الطويل الذي سيظهر عندما تقوم بالتحويم على
+                          النص.
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="p-4 bg-white border rounded-lg shadow">
+                      <strong>📦 الوحدة:</strong>
+                      <p class="text-gray-600">{{ product.unit }}</p>
+                    </div>
+
+                    <div class="p-4 bg-white border rounded-lg shadow">
+                      <strong>⚖️ نوع المعيارية:</strong>
+                      <p class="text-gray-600">{{ product.standardType }}</p>
+                    </div>
+
+                    <div class="p-4 bg-white border rounded-lg shadow">
+                      <strong>💵 سعر التكلفة:</strong>
+                      <p class="text-gray-600">{{ product.costPrice }} ج.م</p>
+                    </div>
+
+                    <div class="p-4 bg-white border rounded-lg shadow">
+                      <strong>📂 التصنيفات الفرعية:</strong>
+                      <div class="flex flex-wrap gap-2">
+                        <span
+                          *ngFor="let sub of product.subCategories"
+                          class="px-2 py-1 text-purple-700 bg-purple-100 rounded"
+                        >
+                          {{ sub }}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- نهاية Boxes -->
+                </div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- <div class="min-h-screen p-4 dark:bg-gray-900">
   <form
     [formGroup]="filterForm"
     (ngSubmit)="applyFilters()"
@@ -14,10 +240,8 @@
     <button type="submit" class="btn">تطبيق الفلاتر</button>
   </form>
 
-  <!-- زر الطباعة -->
   <button (click)="printBarcodes()" class="mb-4 btn">طباعة الباركودات</button>
 
-  <!-- عرض الباركودات -->
   <div #barcodeContainer class="flex flex-wrap gap-4">
     @for (code of barcodes; track i; let i = $index) {
 
@@ -26,7 +250,7 @@
     </div>
     }
   </div>
-</div>
+</div> -->
 
 <!-- <button
   (click)="toggleTheme()"
