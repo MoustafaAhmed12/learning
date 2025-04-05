@@ -1,133 +1,25 @@
-<!-- <div class="container p-6 mx-auto">
-  <h2 class="mb-6 text-3xl font-bold text-center text-gray-800">
-    🛍️ قائمة المنتجات
-  </h2>
+<br />
+Subject:
+<input type="text" [(ngModel)]="subject" />
+<br />
+<br />
+<quill-editor
+  [(ngModel)]="htmlText"
+  placeholder="Enter Text"
+  [modules]="quillConfig"
+  (onSelectionChanged)="onSelectionChanged($event)"
+  (onContentChanged)="onContentChanged($event)"
+  (onFocus)="onFocus()"
+  (onBlur)="onBlur()"
+  [style.height.px]="300"
+  class="border rounded dark:border-gray-600 dark:bg-gray-800 dark:text-white"
+>
+  > ></quill-editor
+>
 
-  <div
-    class="overflow-x-auto bg-white border border-gray-200 shadow-lg rounded-xl"
-  >
-    <table class="min-w-full text-right">
-      <thead>
-        <tr
-          class="text-center text-white bg-gradient-to-r from-blue-500 to-blue-700"
-        >
-          <th class="px-5 py-3 border">🔢 الباركود</th>
-          <th class="px-5 py-3 border">📛 الاسم</th>
-          <th class="px-5 py-3 border">💰 السعر النقدي</th>
-          <th class="px-5 py-3 border">📂 التصنيف</th>
-          <th class="px-5 py-3 border">📝 التفاصيل</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (product of products; track product.name) {
-
-        <tr
-          class="text-center transition-all duration-300 border-b hover:bg-gray-100"
-        >
-          <td class="px-5 py-3 font-semibold">{{ product.barcode }}</td>
-          <td class="px-5 py-3 font-semibold text-gray-700">
-            {{ product.name }}
-          </td>
-          <td class="px-5 py-3 font-semibold text-green-600">
-            {{ product.cashPrice }} ج.م
-          </td>
-          <td class="px-5 py-3 font-semibold text-blue-600">
-            {{ product.category }}
-          </td>
-          <td class="px-5 py-3">
-            <button
-              class="flex items-center justify-center gap-2 font-semibold text-blue-600 transition-all hover:text-blue-800"
-              (click)="toggleDetails(product)"
-            >
-              <span>{{ product.expanded ? "إخفاء" : "عرض" }}</span>
-
-              <svg
-                *ngIf="!product.expanded"
-                class="w-5 h-5 transition-transform duration-300"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M19 9l-7 7-7-7"
-                ></path>
-              </svg>
-
-              <svg
-                *ngIf="product.expanded"
-                class="w-5 h-5 transition-transform duration-300 rotate-180"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M19 9l-7 7-7-7"
-                ></path>
-              </svg>
-            </button>
-          </td>
-        </tr>
-        <tr>
-          <td colspan="5" class="p-0">
-            <div
-              class="overflow-hidden transition-all duration-500 ease-in-out"
-              [ngStyle]="{ 'max-height': product.expanded ? '500px' : '0px' }"
-            >
-              <div
-                class="p-4 bg-gray-100 border border-gray-300 rounded-lg shadow-md"
-              >
-                <h3 class="mb-2 text-lg font-bold text-center text-gray-700">
-                  {{ product.name }}
-                </h3>
-
-                <div class="flex flex-col items-center gap-4 md:flex-row">
-                  <div *ngIf="product.image" class="flex-shrink-0 w-32 h-32">
-                    <img
-                      [src]="product.image"
-                      alt="صورة المنتج"
-                      class="object-cover w-full h-full rounded-lg shadow-sm"
-                    />
-                  </div>
-
-                  <div
-                    class="grid flex-grow grid-cols-1 gap-4 text-sm text-center text-gray-600 md:grid-cols-2"
-                  >
-                    <p>
-                      <strong>الاسم المختصر:</strong> {{ product.shortName }}
-                    </p>
-                    <p><strong>الوصف:</strong> {{ product.description }}</p>
-                    <p><strong>الوحدة:</strong> {{ product.unit }}</p>
-                    <p>
-                      <strong>نوع المعيارية:</strong> {{ product.standardType }}
-                    </p>
-                    <p>
-                      <strong>سعر التكلفة:</strong> {{ product.costPrice }} ج.م
-                    </p>
-                    <p>
-                      <strong>التصنيفات الفرعية:</strong>
-                      <span
-                        *ngFor="let sub of product.subCategories"
-                        class="px-2 py-1 mx-1 text-blue-700 bg-blue-100 rounded"
-                      >
-                        {{ sub }}
-                      </span>
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </td>
-        </tr>
-        }
-      </tbody>
-    </table>
-  </div>
-</div> -->
+<h2>Preview email will show the following</h2>
+Subject: {{ subject }}
+<br />
+<br />
+Body:
+<div [innerHTML]="htmlText"></div>

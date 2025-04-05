@@ -58,7 +58,14 @@ import { HttpClient } from '@angular/common/http';
 // import { CookieService } from 'ngx-t';
 @Component({
   selector: 'app-root',
-  imports: [TranslateModule, FormsModule, ReactiveFormsModule, CommonModule],
+  imports: [
+    TranslateModule,
+    FormsModule,
+    ReactiveFormsModule,
+    CommonModule,
+    HomeComponent,
+    NavbarComponent,
+  ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

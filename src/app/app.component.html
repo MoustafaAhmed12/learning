@@ -1,15 +1,18 @@
-<div class="container p-6 mx-auto space-y-6">
+<!-- <app-home></app-home> -->
+
+<app-navbar />
+
+<!-- <div class="container p-6 mx-auto space-y-6">
   <button (click)="show(1)">Ckick</button>
   <div class="flex flex-col items-center justify-between gap-4 md:flex-row">
-    <!-- مربع البحث -->
     <div class="flex items-center w-full space-x-2 md:w-1/3">
-      <!-- <input
+      <input
         type="text"
         [(ngModel)]="searchQuery"
         (keyup)="filterProducts()"
         placeholder="🔍 ابحث عن منتج..."
         class="w-full p-3 transition-all border rounded-lg shadow-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
-      /> -->
+      />
       <input
         type="text"
         [(ngModel)]="searchQuery"
@@ -19,9 +22,7 @@
       />
     </div>
 
-    <!-- الفلاتر -->
     <div class="flex items-center w-full space-x-4 md:w-2/3">
-      <!-- فلتر التصنيف -->
       <div class="flex items-center space-x-2">
         <label for="category" class="text-lg">📂 التصنيف</label>
         <select
@@ -37,7 +38,6 @@
         </select>
       </div>
 
-      <!-- فلتر السعر -->
       <div class="flex items-center space-x-2">
         <label for="priceRange" class="text-lg">💰 السعر</label>
         <select
@@ -71,7 +71,6 @@
       </thead>
       <tbody>
         @for (product of filteredProducts ; track $index) {
-        <!-- الصف الأساسي -->
         <tr
           class="text-center transition-all duration-300 hover:bg-gray-50"
           [class.border-b-8]="!$last"
@@ -110,7 +109,6 @@
             {{ product.category }}
           </td>
           <td class="flex justify-center gap-3 px-5 py-4">
-            <!-- زر تعديل -->
             <button
               class="text-yellow-600 transition-all hover:text-yellow-800"
               (click)="editProduct(product)"
@@ -131,7 +129,6 @@
               </svg>
             </button>
 
-            <!-- زر حذف -->
             <button
               class="text-red-600 transition-all hover:text-red-800"
               (click)="deleteProduct(product)"
@@ -154,7 +151,6 @@
           </td>
         </tr>
 
-        <!-- تفاصيل المنتج -->
         <tr *ngIf="product.expanded">
           <td colspan="5" class="p-0">
             <div
@@ -163,7 +159,6 @@
             >
               <div class="p-5">
                 <div class="flex flex-col items-center gap-4 md:flex-row">
-                  <!-- صورة المنتج إن وجدت -->
                   <div *ngIf="product.image" class="flex-shrink-0 w-32 h-32">
                     <img
                       [src]="product.image"
@@ -172,7 +167,6 @@
                     />
                   </div>
 
-                  <!-- تفاصيل المنتج داخل Boxes -->
                   <div
                     class="grid w-full grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3"
                   >
@@ -221,7 +215,6 @@
                       </div>
                     </div>
                   </div>
-                  <!-- نهاية Boxes -->
                 </div>
               </div>
             </div>
@@ -231,7 +224,7 @@
       </tbody>
     </table>
   </div>
-</div>
+</div> -->
 
 <!-- <div class="min-h-screen p-4 dark:bg-gray-900">
   <form

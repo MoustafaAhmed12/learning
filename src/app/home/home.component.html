@@ -1,0 +1,118 @@
+<div class="max-w-5xl p-6 mx-auto bg-white rounded shadow">
+  <h2 class="mb-6 text-2xl font-bold text-center">فاتورة عرض سعر</h2>
+
+  <table class="w-full border border-gray-300 table-fixed">
+    <thead>
+      <tr class="text-gray-800 bg-gray-100">
+        <th class="w-10 p-2 border border-gray-300">#</th>
+        <th class="p-2 border border-gray-300">المنتج</th>
+        <th class="p-2 border border-gray-300 w-28">الكمية</th>
+        <th class="p-2 border border-gray-300 w-28">السعر</th>
+        <th class="w-32 p-2 border border-gray-300">الإجمالي</th>
+        <th class="w-16 p-2 border border-gray-300"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        *ngFor="let row of products; let i = index"
+        class="border-b border-gray-200"
+      >
+        <td class="p-2 text-center">{{ i + 1 }}</td>
+
+        <!-- المنتج -->
+        <td class="relative p-2">
+          <input
+            type="text"
+            [(ngModel)]="row.name"
+            (input)="onProductNameChange(row.name, row)"
+            class="w-full px-2 py-1 border border-gray-300 rounded"
+            placeholder="ابحث باسم المنتج أو الباركود"
+          />
+          <!-- Autocomplete -->
+          <ul
+            *ngIf="row.filtered.length"
+            class="absolute z-10 w-full mt-1 overflow-y-auto bg-white border border-gray-300 rounded shadow max-h-40"
+          >
+            <li
+              *ngFor="let option of row.filtered"
+              (click)="selectProduct(option, row)"
+              class="px-2 py-1 cursor-pointer hover:bg-gray-100"
+            >
+              {{ option.name }}
+            </li>
+          </ul>
+        </td>
+
+        <!-- الكمية -->
+        <td class="p-2">
+          <input
+            type="number"
+            [(ngModel)]="row.quantity"
+            (input)="onQuantityChange(row)"
+            class="w-full px-2 py-1 text-center border border-gray-300 rounded"
+            min="0"
+          />
+        </td>
+
+        <!-- السعر -->
+        <td class="p-2">
+          <input
+            type="number"
+            [(ngModel)]="row.price"
+            (input)="onQuantityChange(row)"
+            class="w-full px-2 py-1 text-center border border-gray-300 rounded"
+            min="0"
+          />
+        </td>
+
+        <!-- الإجمالي -->
+        <td class="p-2 text-center">
+          {{ row.total.toFixed(2) }}
+        </td>
+
+        <!-- حذف -->
+        <td class="p-2 text-center">
+          <button
+            (click)="deleteRow(i)"
+            class="text-red-500 hover:text-red-700"
+            title="حذف الصف"
+          >
+            🗑️
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- زر إضافة صف -->
+  <div class="flex items-center justify-between mt-4">
+    <button
+      type="button"
+      (click)="addRow()"
+      class="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600"
+    >
+      + إضافة صف جديد
+    </button>
+
+    <div class="text-lg font-semibold">
+      الإجمالي الكلي:
+      <span class="text-green-600">{{ getTotal().toFixed(2) }}</span> جنيه
+    </div>
+  </div>
+
+  <!-- أزرار الطباعة والمعاينة -->
+  <div class="flex justify-end gap-4 mt-6">
+    <button
+      (click)="openPDFInNewTab()"
+      class="px-4 py-2 text-white bg-yellow-500 rounded hover:bg-yellow-600"
+    >
+      🗂️ معاينة في تبويب جديد
+    </button>
+    <button
+      (click)="printPDF()"
+      class="px-4 py-2 text-white bg-green-600 rounded hover:bg-green-700"
+    >
+      🖨️ طباعة PDF
+    </button>
+  </div>
+</div>
